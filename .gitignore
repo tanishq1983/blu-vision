@@ -1,0 +1,42 @@
+# Git ignore
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+dist-ssr/
+*.local
+
+# Environment
+.env
+.venv/
+*.pyc
+__pycache__/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data & runtime (large binary assets, generated lessons)
+data/lessons/
+data/exports/
+data/cache/
+data/models/*.bin
+data/models/*.safetensors
+*.log
+api.log
+vite.log
+
+# Misc
+tts_test/
+*.tmp

@@ -1,0 +1,42 @@
+@import '@fontsource/noto-sans/400.css';
+@import '@fontsource/noto-sans/500.css';
+@import '@fontsource/noto-sans/600.css';
+@import '@fontsource/noto-sans/700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
+  color: #e6edf7;
+  background: #080c17;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+html { background: #080c17; }
+body { min-width: 320px; min-height: 100vh; margin: 0; }
+button, input, select, textarea { font: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 2px;
+}
+
+.app-surface {
+  background:
+    radial-gradient(circle at 52% -12%, rgba(111, 76, 255, .2), transparent 35rem),
+    radial-gradient(circle at 100% 32%, rgba(20, 184, 166, .08), transparent 28rem),
+    #080c17;
+}
+
+.panel-glass {
+  background: rgba(17, 24, 39, .78);
+  border: 1px solid rgba(148, 163, 184, .13);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, .18);
+  backdrop-filter: blur(18px);
+}
+
+.muted-scrollbar { scrollbar-width: thin; scrollbar-color: #334155 transparent; }
+.muted-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+.muted-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 999px; }

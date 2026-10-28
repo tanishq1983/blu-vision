@@ -1,0 +1,21 @@
+export const RENDER_PAGE = (lessonId: string, lang: string) => [
+  '<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#000;font-family:sans-serif}svg{width:1280px;height:720px;display:block}</style></head><body><div id="root"></div><script>',
+  'const LANG=' + JSON.stringify(lang) + '; let lesson=null; let t=0; const root=document.getElementById("root");',
+  'function esc(s){return String(s??\'\').replace(/[&<>"]/g,c=>({\'&\':\'&amp;\',\'<\':\'&lt;\',\'>\':\'&gt;\',\'"\':\'&quot;\'}[c]||\'&#39;\'));}',
+  'async function load(){const r=await fetch("/api/lessons/"+new URLSearchParams(location.search).get("lesson")); lesson=await r.json(); window.renderReady=true; draw();}',
+  'window.setTime=async(sec)=>{t=sec; draw();};',
+  'function draw(){if(!lesson){root.innerHTML="loading…";return;} const tl=lesson.timeline?.[LANG]; if(!tl){root.innerHTML="no timeline";return;}',
+  'const seg=tl.scenes.find(s=>t>=s.start&&t<s.end)||tl.scenes[tl.scenes.length-1]; const scene=lesson.scenes.find(x=>x.id===seg.id); if(!scene){root.innerHTML="no scene";return;}',
+  'const prog=Math.min(1,Math.max(0,(t-seg.start)/Math.max(0.01,seg.end-seg.start-0.5))); let svg="";',
+  'if(scene.component==="title_card"){const sub=esc(scene.props.subtitle?.[LANG]||scene.props.subtitle?.en||\'\'); const ttl=esc(scene.title?.[LANG]||scene.title?.en||\'\');',
+  'svg=\'<svg viewBox="0 0 1280 720"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4f46e5"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs><text x="50%" y="40%" text-anchor="middle" font-size="56" font-weight="800" fill="url(#g)" opacity="\'+Math.min(1,prog*2)+\'">\'+sub+\'</text><text x="50%" y="55%" text-anchor="middle" font-size="34" fill="#1f2937" opacity="\'+Math.min(1,(prog-0.4)*2.5)+\'">\'+ttl+\'</text></svg>\';}',
+  'else if(scene.component==="bullet_reveal"){const items=scene.props.items||[]; const n=Math.min(items.length,Math.ceil(prog*items.length)); let inner="";',
+  'for(let i=0;i<items.length;i++){const it=items[i]; const txt=i<n?esc(it[LANG]||it.en||it.kn):\'\'; inner+=\'<g><circle cx="120" cy="\'+(180+i*90)+\'" r="14" fill="#4f46e5"/><text x="170" y="185" font-size="24" fill="#111827" dominant-baseline="middle">\'+txt+\'</text></g>\';}',
+  'svg=\'<svg viewBox="0 0 1280 720">\'+inner+\'</svg>\';}',
+  'else if(scene.component==="flowchart"){const nodes=scene.props.nodes||[]; const n=Math.min(nodes.length,Math.ceil(prog*nodes.length)); let inner="";',
+  'for(let i=0;i<nodes.length;i++){const x=nodes[i]; const y=160+i*130; const r=i<n?1:0.15; const txt=esc(x[LANG]||x.en||\'\'); let arrow="";',
+  'if(i<nodes.length-1){arrow=\'<line x1="640" y1="\'+(y+80)+\'" x2="640" y2="\'+(y+130)+\'" stroke="#4f46e5" stroke-width="3" marker-end="url(#arr)" opacity="\'+r+\'"/>.\';}',
+  'inner+=\'<g opacity="\'+r+\'"><rect x="460" y="\'+y+\'" width="360" height="80" rx="12" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/><text x="640" y="\'+(y+45)+\'" text-anchor="middle" font-size="22" fill="#111827" dominant-baseline="middle">\'+txt+\'</text>\'+arrow+\'</g>\';}',
+  'svg=\'<svg viewBox="0 0 1280 720"><defs><marker id="arr" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><polygon points="0,0 10,3 0,6" fill="#4f46e5"/></marker></defs>\'+inner+\'</svg>\';}',
+  'else{svg=\'<svg viewBox="0 0 1280 720"><text x="50%" y="50%" text-anchor="middle" fill="#666">\'+esc(scene.component)+\'</text></svg>\';} root.innerHTML=svg;} load();</script></body></html>'
+].join('\n');
